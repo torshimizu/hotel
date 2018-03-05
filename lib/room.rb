@@ -2,7 +2,7 @@ module Hotel
   STANDARD_RATE = 200
 
   class Room
-    attr_reader :room_id, :cost
+    attr_reader :room_id, :cost, :reservations
 
     def initialize(input)
       @room_id = input[:id]
@@ -11,7 +11,16 @@ module Hotel
       @reservations = input[:reservations] == nil ? [] : input[:reservations] # setting the default to an empty array if no reservations for that room
     end
 
-    def check_status(start_date, end_date)
+    def check_availability(start_date, end_date) # should this be a date or string instance?
+      @reservations.each do |reservation|
+        if (start_date > reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date < reservation.end_date)
+          return :UNAVAILABLE
+        end
+        # if end_date > reservation.start_date && end_date < reservation.end_date
+        #   return :UNAVAILABLE
+        # end
+      end
+      return :AVAILABLE
     end
   end
 end
