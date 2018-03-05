@@ -7,9 +7,10 @@ module Hotel
     def initialize(input)
       @start_date = Date.parse(input[:start_date])
       @end_date = Date.parse(input[:end_date])
-      @room = get_room(input[:room_id]) # might need to consider multiple rooms?
+      @room_id = input[:room_id] # get_room(input[:room_id]) where should check_availability be called??
       @guest_last_name = input[:guest_last_name]
       @guest_first_name = input[:guest_first_name].nil? ? nil : input[:guest_first_name]
+      @block = input[:block].nil? ? nil : input[:block]
 
 
       if (@start_date == nil || @end_date == nil) || @start_date > @end_date
@@ -24,11 +25,11 @@ module Hotel
 
     private
 
-    def get_room(id)
-      room = Admin.rooms.find(nil) { |rm| rm.id == id }
-      if room.nil?
-        raise ArgumentError.new("Not a valid room number")
-      end
-    end
+    # def get_room(id)
+    #   room = Admin.rooms.find(nil) { |rm| rm.id == id }
+    #   if room.nil?
+    #     raise ArgumentError.new("Not a valid room number")
+    #   end
+    # end
   end
 end
