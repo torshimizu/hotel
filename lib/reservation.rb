@@ -16,5 +16,10 @@ module Hotel
         raise StandardError.new("Invalid dates")
       end
     end
+
+    def calculate_cost
+      duration = (@end_date - @start_date).to_i
+      return duration * STANDARD_RATE
+    end
   end
 end
