@@ -34,20 +34,20 @@ describe "Hotel::Room" do
     end
 
     it "should return UNAVAILABLE if a reservation is wanted during a booked date" do
-      start_date1 = Date.parse("2018-03-05")
-      end_date1 = Date.parse("2018-03-09")
+      start_date1 = "2018-03-05"
+      end_date1 = "2018-03-09"
       status = @new_room.check_availability(start_date1, end_date1)
       status.must_equal :UNAVAILABLE
 
-      start_date2 = Date.parse("2018-03-01")
-      end_date2 = Date.parse("2018-03-07")
+      start_date2 = "2018-03-01"
+      end_date2 = "2018-03-07"
       status = @new_room.check_availability(start_date2, end_date2)
       status.must_equal :UNAVAILABLE
     end
 
     it "should return AVAILABLE if a room is available during that time" do
-      start_date = Date.parse("2018-03-09")
-      end_date = Date.parse("2018-03-12")
+      start_date = "2018-03-09"
+      end_date = "2018-03-12"
       status = @new_room.check_availability(start_date, end_date)
       status.must_equal :AVAILABLE
     end

@@ -12,13 +12,13 @@ module Hotel
     end
 
     def check_availability(start_date, end_date) # should this be a date or string instance?
+      start_date = Date.parse(start_date)
+      end_date = Date.parse(end_date)
+
       @reservations.each do |reservation|
         if (start_date > reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date < reservation.end_date)
           return :UNAVAILABLE
         end
-        # if end_date > reservation.start_date && end_date < reservation.end_date
-        #   return :UNAVAILABLE
-        # end
       end
       return :AVAILABLE
     end
