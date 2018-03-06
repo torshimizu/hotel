@@ -29,7 +29,7 @@ describe "Hotel::Admin" do
     before do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
-      @input = {start_date: "2018-03-05", end_date: "2018-03-08"}
+      @input = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
     end
 
     it "should create a new instance of reservation if the reservation is available" do
@@ -57,9 +57,9 @@ describe "Hotel::Admin" do
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
-      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08"}
-      @input2 = {start_date: "2018-03-07", end_date: "2018-03-09"}
-      @input3 = {start_date: "2018-04-05", end_date: "2018-04-09"}
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
+      @input2 = {start_date: "2018-03-07", end_date: "2018-03-09", guest_last_name: "Hopper"}
+      @input3 = {start_date: "2018-04-05", end_date: "2018-04-09", guest_last_name: "Hopper"}
       @reservation1 = @admin.new_reservation(@input1)
       @reservation2 = @admin.new_reservation(@input2)
       @reservation3 = @admin.new_reservation(@input3)
@@ -94,7 +94,7 @@ describe "Hotel::Admin" do
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
-      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08"}
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
       @reservation1 = @admin.new_reservation(@input1)
     end
 

@@ -13,11 +13,16 @@ describe "Hotel::Reservation" do
     end
 
     it "must raise an error if given an invalid start or end date" do
-      details = { start_date: "2018-03-23", end_date: "2018-02-25", room_id: 2 }
+      details = { start_date: "2018-03-23", end_date: "2018-02-25", room_id: 2, guest_last_name: "Hopper"}
       proc {Hotel::Reservation.new(details)}.must_raise StandardError
 
-      details2 = { room_id: 2 }
+      details2 = { room_id: 2, guest_last_name: "Hopper" }
       proc {Hotel::Reservation.new(details2)}.must_raise StandardError
+    end
+
+    it "must raise an error if no last name is entered" do
+      details = { start_date: "2018-03-23", end_date: "2018-03-25", room_id: 2,}
+      proc {Hotel::Reservation.new(details)}.must_raise StandardError
     end
 
     it "must have an associated room id" do

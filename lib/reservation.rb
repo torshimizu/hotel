@@ -16,6 +16,10 @@ module Hotel
       if (@start_date == nil || @end_date == nil) || @start_date > @end_date
         raise StandardError.new("Invalid dates")
       end
+
+      if @guest_last_name.nil?
+        raise StandardError.new("Must enter a last name")
+      end
     end
 
     def calculate_cost
