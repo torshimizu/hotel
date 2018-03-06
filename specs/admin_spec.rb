@@ -97,7 +97,7 @@ describe "Hotel::Admin" do
     end
 
     it "should calculate the cost for a given reservation" do
-      cost = @admin.calculate_reservation_cost(start_date: "2018-03-05", room_id: 3)
+      cost = @admin.calculate_reservation_cost(room_id: 3, start_date: "2018-03-05")
       cost.must_be_instance_of Float
       cost.must_equal 600.00
     end

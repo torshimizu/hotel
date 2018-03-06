@@ -22,7 +22,7 @@ module Hotel
       return new_reservation
     end
 
-    def find_room(id) # not sure where this should go!
+    def find_room(id)
       room = @rooms.find { |rm| rm.room_id == id }
       if room.nil?
         raise ArgumentError.new("Not a valid room number")
@@ -39,6 +39,18 @@ module Hotel
       return target_reservations.empty? ? nil : target_reservations
     end
 
+    def calculate_reservation_cost(start_date:, room_id:)
+      reservation = find_reservation(start_date: start_date, room_id: room_id)
+      reservation.calculate_cost
+    end
+
+    def find_reservation(start_date:, room_id:)
+      start_date = Date.parse(start_date)
+      @reservations.find do |reservation|
+        reservation.start_date == start_date && reservation.room_id == room_id
+      end
+    end
+
     private
 
     def get_rooms(num_of_rooms) # factory method
@@ -49,7 +61,6 @@ module Hotel
       end
       return rooms
     end
-
 
     def check_room_status(room, start_date, end_date)
       status = room.check_availability(start_date, end_date)
