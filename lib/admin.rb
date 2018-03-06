@@ -39,7 +39,6 @@ module Hotel
       return target_reservations.empty? ? nil : target_reservations
     end
 
-
     private
 
     def get_rooms(num_of_rooms) # factory method
@@ -55,7 +54,7 @@ module Hotel
     def check_room_status(room, start_date, end_date)
       status = room.check_availability(start_date, end_date)
       if status == :UNAVAILABLE
-        raise NotAvailableRoom.new("#{room.room_id} is not available for those dates")
+        raise NotAvailableRoom.new("Room #{room.room_id} is not available for those dates")
       end
     end
 

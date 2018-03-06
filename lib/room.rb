@@ -16,7 +16,8 @@ module Hotel
       end_date = Date.parse(end_date)
 
       @reservations.each do |reservation|
-        if (start_date > reservation.start_date && start_date < reservation.end_date) || (end_date > reservation.start_date && end_date < reservation.end_date)
+        range = (reservation.start_date..reservation.end_date)
+        if range.include?(start_date) || range.include?(end_date)
           return :UNAVAILABLE
         end
       end

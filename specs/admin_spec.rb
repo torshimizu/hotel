@@ -30,6 +30,7 @@ describe "Hotel::Admin" do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
       @input = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
+      @room3_reservation_count = @admin.find_room(3).reservations.length
       @new_reservation = @admin.new_reservation(@input)
     end
 
@@ -43,14 +44,9 @@ describe "Hotel::Admin" do
     end
 
     it "should add the reservation to the room's list of reservations" do
-      room3 = @admin.find_room(3)
-      room3_reservations = room3.reservations.length
-
-      reservation = @admin.new_reservation(@input)
-
-      booked_room = reservation.room
-      booked_room.reservations.must_include reservation
-      booked_room.reservations.length.must_equal room3_reservations + 1
+      booked_room = @new_reservation.room
+      booked_room.reservations.must_include @new_reservation
+      booked_room.reservations.length.must_equal @room3_reservation_count + 1
     end
 
   end
@@ -89,6 +85,21 @@ describe "Hotel::Admin" do
 
     it "should return nil if no reservations for that date" do
       @admin.list_reservations("2018-03-12").must_be_nil
+    end
+  end
+
+  describe "Admin#calculate_reservation_cost" do
+    before do
+      @number_of_rooms = 20
+      @admin = Hotel::Admin.new(@number_of_rooms)
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
+      @reservation1 = @admin.new_reservation(@input1)
+    end
+
+    it "should calculate the cost for a given reservation" do
+      cost = @admin.calculate_reservation_cost(start_date: "2018-03-05", room_id: 3)
+      cost.must_be_instance_of Float
+      cost.must_equal 600.00
     end
   end
 end

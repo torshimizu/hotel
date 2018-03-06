@@ -39,8 +39,8 @@ describe "Hotel::Reservation" do
     end
 
     it "must return the cost of the reservation" do
-      @reservation.calculate_cost.must_be_instance_of Integer
-      @reservation.calculate_cost.must_equal 400
+      @reservation.calculate_cost.must_be_instance_of Float
+      @reservation.calculate_cost.must_equal 400.00
     end
 
   end

@@ -20,7 +20,7 @@ module Hotel
 
     def calculate_cost
       duration = (@end_date - @start_date).to_i
-      return duration * STANDARD_RATE
+      return (duration * STANDARD_RATE).to_f.round(2)
     end
 
   end # Reservation
