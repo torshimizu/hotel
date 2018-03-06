@@ -4,7 +4,7 @@ module Hotel
   class Room
     attr_reader :room_id, :cost, :reservations
 
-    def initialize(input)
+    def initialize(input) # taking a hash so that an array of reservations can be loaded if that's what user wants to do
       @room_id = input[:id]
       # @current_status ||= :AVAILABLE
       @cost = STANDARD_RATE

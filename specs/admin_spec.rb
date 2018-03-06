@@ -37,7 +37,11 @@ describe "Hotel::Admin" do
     it "should raise an error if the room is booked during the requested time" do
       reservation2 = {start_date: "2018-03-07", end_date: "2018-03-09", room_id: 3}
       proc {@admin.new_reservation(reservation2)}.must_raise NotAvailableRoom
+    end
 
+    it "should add the reservation to the room's list of reservations" do
+      booked_room = @new_reservation.room
+      booked_room.reservations.must_include @new_reservation
     end
 
   end

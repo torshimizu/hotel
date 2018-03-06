@@ -9,9 +9,10 @@ module Hotel
       @reservations = []
     end
 
-    def new_reservation(input)
+    def new_reservation(input) # maybe this new_reservation should look at available dates first then choose an available room
       room = find_room(input[:room_id])
-      check_room_status(room, input[:start_date], input[:end_date])
+      input.merge!({room: room})
+      check_room_status(input[:room], input[:start_date], input[:end_date])
       new_reservation = Reservation.new(input)
 
       @reservations << new_reservation
@@ -31,13 +32,6 @@ module Hotel
       return rooms
     end
 
-    def find_room(id)
-      room = @rooms.find(id) { |rm| rm.room_id == id }
-      if room.nil?
-        raise ArgumentError.new("Not a valid room number")
-      end
-      return room
-    end
 
     def check_room_status(room, start_date, end_date)
       status = room.check_availability(start_date, end_date)
@@ -46,5 +40,12 @@ module Hotel
       end
     end
 
+    def find_room(id) # not sure where this should go!
+      room = @rooms.find { |rm| rm.room_id == id }
+      if room.nil?
+        raise ArgumentError.new("Not a valid room number")
+      end
+      return room
+    end
   end
 end
