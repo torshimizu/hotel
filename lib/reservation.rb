@@ -7,8 +7,8 @@ module Hotel
     def initialize(input)
       @start_date = Date.parse(input[:start_date])
       @end_date = Date.parse(input[:end_date])
-      @room = input[:room]
-      @room_id = input[:room_id].nil? ? nil : input[:room_id]
+      @room = input[:room].nil? ? nil : input[:room]
+      @room_id = input[:room_id]
       @guest_last_name = input[:guest_last_name]
       @guest_first_name = input[:guest_first_name].nil? ? nil : input[:guest_first_name]
       @block = input[:block].nil? ? nil : input[:block]

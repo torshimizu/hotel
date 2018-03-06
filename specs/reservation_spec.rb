@@ -3,8 +3,8 @@ require_relative 'spec_helper'
 describe "Hotel::Reservation" do
   describe "initialize" do
     before do
-      @room = Hotel::Room.new({room_id: 2})
-      details = { start_date: "2018-03-23", end_date: "2018-03-25", room: @room, guest_last_name: "Lovelace" }
+      @room = Hotel::Room.new({id: 2})
+      details = { start_date: "2018-03-23", end_date: "2018-03-25", room_id: 2, guest_last_name: "Lovelace" }
       @reservation = Hotel::Reservation.new(details)
     end
 
@@ -20,10 +20,16 @@ describe "Hotel::Reservation" do
       proc {Hotel::Reservation.new(details2)}.must_raise StandardError
     end
 
-    it "must have an instance of room" do
-      @reservation.must_respond_to :room
-      @reservation.room.must_be_instance_of Hotel::Room
-      @reservation.room_id.must_equal @room.room_id
+    # ____IS THIS NECESSARY____
+    # it "must have an instance of room" do
+    #   @reservation.must_respond_to :room
+    #   @reservation.room.must_be_instance_of Hotel::Room
+    #   @reservation.room_id.must_equal @room.room_id
+    # end
+    
+    it "must have an associated room id" do
+        @reservation.must_respond_to :room_id
+        @reservation.room_id.must_equal @room.room_id
     end
 
     it "must have a guest" do

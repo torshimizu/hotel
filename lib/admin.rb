@@ -46,9 +46,10 @@ module Hotel
 
     def find_reservation(start_date:, room_id:)
       start_date = Date.parse(start_date)
-      @reservations.find do |reservation|
+      found_reservation = @reservations.find(nil) do |reservation|
         reservation.start_date == start_date && reservation.room_id == room_id
       end
+      return check_for_reservation(found_reservation)
     end
 
     private
@@ -67,6 +68,13 @@ module Hotel
       if status == :UNAVAILABLE
         raise NotAvailableRoom.new("Room #{room.room_id} is not available for those dates")
       end
+    end
+
+    def check_for_reservation(reservation)
+      if reservation.nil?
+        raise NoReservation.new("There is no reservation for that date")
+      end
+      return reservation
     end
 
   end

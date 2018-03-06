@@ -101,5 +101,9 @@ describe "Hotel::Admin" do
       cost.must_be_instance_of Float
       cost.must_equal 600.00
     end
+
+    it "should return an error if no reservation" do
+      proc{@admin.calculate_reservation_cost(room_id: 7, start_date: "2018-03-05")}.must_raise NoReservation
+    end
   end
 end
