@@ -26,8 +26,8 @@ describe "Hotel::Admin" do
     before do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
-      input = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
-      @new_reservation = @admin.new_reservation(input)
+      @input = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
+      @new_reservation = @admin.new_reservation(@input)
     end
 
     it "should create a new instance of reservation if the reservation is available" do
@@ -40,8 +40,14 @@ describe "Hotel::Admin" do
     end
 
     it "should add the reservation to the room's list of reservations" do
-      booked_room = @new_reservation.room
-      booked_room.reservations.must_include @new_reservation
+      room3 = @admin.find_room(3)
+      room3_reservations = room3.reservations.length
+
+      reservation = @admin.new_reservation(@input)
+
+      booked_room = reservation.room
+      booked_room.reservations.must_include reservation
+      booked_room.reservations.length.must_equal room3_reservations + 1
     end
 
   end

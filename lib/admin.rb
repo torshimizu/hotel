@@ -21,6 +21,14 @@ module Hotel
       return new_reservation
     end
 
+    def find_room(id) # not sure where this should go!
+      room = @rooms.find { |rm| rm.room_id == id }
+      if room.nil?
+        raise ArgumentError.new("Not a valid room number")
+      end
+      return room
+    end
+    
     private
 
     def get_rooms(num_of_rooms) # factory method
@@ -40,12 +48,5 @@ module Hotel
       end
     end
 
-    def find_room(id) # not sure where this should go!
-      room = @rooms.find { |rm| rm.room_id == id }
-      if room.nil?
-        raise ArgumentError.new("Not a valid room number")
-      end
-      return room
-    end
   end
 end
