@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe "Hotel::Admin" do
 
-  describe "initalize" do
+  describe "Admin#initalize" do
 
     before do
       @number_of_rooms = 20
@@ -107,5 +107,35 @@ describe "Hotel::Admin" do
     it "should return an error if no reservation" do
       proc{@admin.calculate_reservation_cost(room_id: 7, start_date: "2018-03-05")}.must_raise NoReservation
     end
+  end
+
+  describe "Admin#find_available_rooms" do
+    before do
+      @number_of_rooms = 20
+      @admin = Hotel::Admin.new(@number_of_rooms)
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
+      @rooms_to_reserve = 5
+      @rooms_to_reserve.times do
+        @admin.new_reservation(@input1)
+      end
+    end
+
+    it "must return a list of rooms that are available for booking during the dates specified" do
+      available_rooms = @admin.find_available_rooms("2018-03-05", "2018-03-08")
+      available_rooms.must_be_instance_of Array
+      available_rooms.each do |room|
+        room.must_be_instance_of Hotel::Room
+      end
+      available_rooms.length.must_equal @admin.rooms.length - @rooms_to_reserve
+    end
+
+    it "must raise an error if there are no available rooms" do
+      rooms_to_reserve = (@number_of_rooms - @rooms_to_reserve)
+      rooms_to_reserve.times do
+        @admin.new_reservation(@input1)
+      end
+      proc {@admin.new_reservation(@input1)}.must_raise NoAvailableRoom
+    end
+
   end
 end

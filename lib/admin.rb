@@ -14,7 +14,7 @@ module Hotel
       start_date = input[:start_date]
       end_date = input[:end_date]
 
-      available_room = find_available_room(start_date, end_date)
+      available_room = find_available_rooms(start_date, end_date).first
 
       new_details = input.merge({room_id: available_room.room_id, room: available_room})
       new_reservation = Reservation.new(new_details)
@@ -47,6 +47,16 @@ module Hotel
       return check_for_reservation(found_reservation)
     end
 
+    def find_available_rooms(start_date, end_date)
+      available_rooms = @rooms.select { |room| room.check_availability(start_date, end_date) == :AVAILABLE }
+
+      if available_rooms.empty?
+        raise NoAvailableRoom.new("No rooms are available for those dates")
+      end
+
+      return available_rooms
+    end
+
     private
 
     def get_rooms(num_of_rooms) # factory method
@@ -58,15 +68,6 @@ module Hotel
       return rooms
     end
 
-    def find_available_room(start_date, end_date)
-      available_room = @rooms.find { |room| room.check_availability(start_date, end_date) == :AVAILABLE }
-
-      if available_room.nil?
-        raise NoAvailableRoom.new("No rooms are available for those dates")
-      end
-
-      return available_room
-    end
 
     def check_for_reservation(reservation)
       if reservation.nil?
