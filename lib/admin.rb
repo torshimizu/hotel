@@ -1,4 +1,5 @@
 require_relative 'notavailable'
+require 'date'
 
 module Hotel
   class Admin
@@ -28,7 +29,17 @@ module Hotel
       end
       return room
     end
-    
+
+    def list_reservations(start_date)
+      start_date = Date.parse(start_date)
+
+      target_reservations = @reservations.select do |reservation|
+        (reservation.start_date..reservation.end_date).include?(start_date)
+      end
+      return target_reservations.empty? ? nil : target_reservations
+    end
+
+
     private
 
     def get_rooms(num_of_rooms) # factory method

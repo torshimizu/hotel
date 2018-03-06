@@ -11,7 +11,7 @@ module Hotel
       @reservations = input[:reservations] == nil ? [] : input[:reservations] # setting the default to an empty array if no reservations for that room
     end
 
-    def check_availability(start_date, end_date) # should this be a date or string instance?
+    def check_availability(start_date, end_date) # should this be a date or string instance? should this go here?!?
       start_date = Date.parse(start_date)
       end_date = Date.parse(end_date)
 
