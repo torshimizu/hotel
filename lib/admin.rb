@@ -1,3 +1,5 @@
+require_relative 'notavailable'
+
 module Hotel
   class Admin
     attr_reader :rooms, :reservations
@@ -8,7 +10,7 @@ module Hotel
     end
 
     private
-    
+
     def get_rooms(num_of_rooms) # factory method
       rooms = []
       num_of_rooms.times do |i|
