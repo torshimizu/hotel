@@ -22,5 +22,9 @@ module Hotel
       end
       return :AVAILABLE
     end
+
+    def add_reservation(reservation)
+      @reservations << reservation
+    end
   end
 end

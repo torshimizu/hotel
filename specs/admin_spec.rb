@@ -24,17 +24,17 @@ describe "Hotel::Admin" do
 
   describe "Admin#new_reservation" do
     before do
-      @number_of_rooms = 20
-      @admin = Hotel::Admin.new(@number_of_rooms)
-      input = {start_date: "03-05-2018", end_date: "03-08-2018", room_id: 3}
+      number_of_rooms = 20
+      @admin = Hotel::Admin.new(number_of_rooms)
+      input = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
       @new_reservation = @admin.new_reservation(input)
     end
 
     it "should create a new instance of reservation if the reservation is available" do
-      new_reservation.must_be_instance_of Hotel::Reservation
+      @new_reservation.must_be_instance_of Hotel::Reservation
     end
 
-    it "should return UNAVAILABLE if the room is booked during the requested time" do
+    it "should raise an error if the room is booked during the requested time" do
       reservation2 = {start_date: "2018-03-07", end_date: "2018-03-09", room_id: 3}
       proc {@admin.new_reservation(reservation2)}.must_raise NotAvailableRoom
 

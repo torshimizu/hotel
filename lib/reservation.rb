@@ -22,14 +22,5 @@ module Hotel
       duration = (@end_date - @start_date).to_i
       return duration * STANDARD_RATE
     end
-
-    private
-
-    # def get_room(id)
-    #   room = Admin.rooms.find(nil) { |rm| rm.id == id }
-    #   if room.nil?
-    #     raise ArgumentError.new("Not a valid room number")
-    #   end
-    # end
   end
 end

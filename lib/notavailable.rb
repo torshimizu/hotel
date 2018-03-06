@@ -1,4 +1,2 @@
-module Hotel
-  class NotAvailableRoom < StandardError
-  end
+class NotAvailableRoom < StandardError
 end
