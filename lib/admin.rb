@@ -10,33 +10,28 @@ module Hotel
       @reservations = []
     end
 
-    def new_reservation(input) # maybe this new_reservation should look at available dates first then choose an available room
-      room = find_room(input[:room_id])
-      input.merge!({room: room})
-      check_room_status(input[:room], input[:start_date], input[:end_date])
-      new_reservation = Reservation.new(input)
+    def new_reservation(input)
+      start_date = input[:start_date]
+      end_date = input[:end_date]
+
+      available_room = find_available_room(start_date, end_date)
+
+      new_details = input.merge({room_id: available_room.room_id, room: available_room})
+      new_reservation = Reservation.new(new_details)
 
       @reservations << new_reservation
-      room.add_reservation(new_reservation)
+      available_room.add_reservation(new_reservation)
 
       return new_reservation
-    end
-
-    def find_room(id)
-      room = @rooms.find { |rm| rm.room_id == id }
-      if room.nil?
-        raise ArgumentError.new("Not a valid room number")
-      end
-      return room
     end
 
     def list_reservations(start_date)
       start_date = Date.parse(start_date)
 
-      target_reservations = @reservations.select do |reservation|
+      date_reservations = @reservations.select do |reservation|
         (reservation.start_date..reservation.end_date).include?(start_date)
       end
-      return target_reservations.empty? ? nil : target_reservations
+      return date_reservations.empty? ? nil : date_reservations
     end
 
     def calculate_reservation_cost(start_date:, room_id:)
@@ -63,11 +58,14 @@ module Hotel
       return rooms
     end
 
-    def check_room_status(room, start_date, end_date)
-      status = room.check_availability(start_date, end_date)
-      if status == :UNAVAILABLE
-        raise NotAvailableRoom.new("Room #{room.room_id} is not available for those dates")
+    def find_available_room(start_date, end_date)
+      available_room = @rooms.find { |room| room.check_availability(start_date, end_date) == :AVAILABLE }
+
+      if available_room.nil?
+        raise NoAvailableRoom.new("No rooms are available for those dates")
       end
+
+      return available_room
     end
 
     def check_for_reservation(reservation)

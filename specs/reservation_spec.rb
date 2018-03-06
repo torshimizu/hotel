@@ -20,13 +20,6 @@ describe "Hotel::Reservation" do
       proc {Hotel::Reservation.new(details2)}.must_raise StandardError
     end
 
-    # ____IS THIS NECESSARY____
-    # it "must have an instance of room" do
-    #   @reservation.must_respond_to :room
-    #   @reservation.room.must_be_instance_of Hotel::Room
-    #   @reservation.room_id.must_equal @room.room_id
-    # end
-    
     it "must have an associated room id" do
         @reservation.must_respond_to :room_id
         @reservation.room_id.must_equal @room.room_id

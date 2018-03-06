@@ -1,4 +1,4 @@
-class NotAvailableRoom < StandardError
+class NoAvailableRoom < StandardError
 end
 
 class NoReservation < StandardError

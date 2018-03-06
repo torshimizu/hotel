@@ -29,24 +29,25 @@ describe "Hotel::Admin" do
     before do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
-      @input = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
-      @room3_reservation_count = @admin.find_room(3).reservations.length
-      @new_reservation = @admin.new_reservation(@input)
+      @input = {start_date: "2018-03-05", end_date: "2018-03-08"}
     end
 
     it "should create a new instance of reservation if the reservation is available" do
-      @new_reservation.must_be_instance_of Hotel::Reservation
+      new_reservation = @admin.new_reservation(@input)
+      new_reservation.must_be_instance_of Hotel::Reservation
     end
 
-    it "should raise an error if the room is booked during the requested time" do
-      reservation2 = {start_date: "2018-03-07", end_date: "2018-03-09", room_id: 3}
-      proc {@admin.new_reservation(reservation2)}.must_raise NotAvailableRoom
+    it "should raise an error if there are no available rooms for that date" do
+      20.times do
+        @admin.new_reservation(@input)
+      end
+      proc{@admin.new_reservation(@input)}.must_raise NoAvailableRoom
     end
 
     it "should add the reservation to the room's list of reservations" do
-      booked_room = @new_reservation.room
-      booked_room.reservations.must_include @new_reservation
-      booked_room.reservations.length.must_equal @room3_reservation_count + 1
+      new_reservation = @admin.new_reservation(@input)
+      booked_room = new_reservation.room
+      booked_room.reservations.must_include new_reservation
     end
 
   end
@@ -56,9 +57,9 @@ describe "Hotel::Admin" do
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
-      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
-      @input2 = {start_date: "2018-03-07", end_date: "2018-03-09", room_id: 4}
-      @input3 = {start_date: "2018-04-05", end_date: "2018-04-09", room_id: 2}
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08"}
+      @input2 = {start_date: "2018-03-07", end_date: "2018-03-09"}
+      @input3 = {start_date: "2018-04-05", end_date: "2018-04-09"}
       @reservation1 = @admin.new_reservation(@input1)
       @reservation2 = @admin.new_reservation(@input2)
       @reservation3 = @admin.new_reservation(@input3)
@@ -89,15 +90,16 @@ describe "Hotel::Admin" do
   end
 
   describe "Admin#calculate_reservation_cost" do
+
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
-      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", room_id: 3}
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08"}
       @reservation1 = @admin.new_reservation(@input1)
     end
 
     it "should calculate the cost for a given reservation" do
-      cost = @admin.calculate_reservation_cost(room_id: 3, start_date: "2018-03-05")
+      cost = @admin.calculate_reservation_cost(room_id: @reservation1.room_id, start_date: "2018-03-05")
       cost.must_be_instance_of Float
       cost.must_equal 600.00
     end
