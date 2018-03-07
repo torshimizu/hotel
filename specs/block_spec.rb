@@ -15,6 +15,19 @@ describe 'Hotel::Block'do
       @new_block.must_be_instance_of Hotel::Block
     end
 
-  end
+    it "has a list of rooms in the block" do
+      @new_block.block_rooms.must_be_instance_of Array
+      @new_block.block_rooms.each do |room|
+        room.must_be_instance_of Hotel::Room
+      end
+    end
 
+    it "cannot have more than 5 rooms in the block" do
+      block_rooms = @admin.rooms.select {|room| (1..6).include?(room.room_id)}
+      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: block_rooms, rate: 150}
+
+      proc {Hotel::Block.new(input)}.must_raise StandardError
+
+    end
+  end
 end

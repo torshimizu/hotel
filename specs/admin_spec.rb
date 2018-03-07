@@ -136,6 +136,51 @@ describe "Hotel::Admin" do
       end
       proc {@admin.new_reservation(@input1)}.must_raise NoAvailableRoom
     end
-
   end
+
+
+  describe "Admin#reserve_block" do
+    before do
+      @number_of_rooms = 20
+      @admin = Hotel::Admin.new(@number_of_rooms)
+      @input1 = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
+      @rooms_to_reserve = 5
+      @rooms_to_reserve.times do
+        @admin.new_reservation(@input1)
+      end
+    end
+
+    it "should create a new instance of Hotel::Block" do
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      new_block = @admin.reserve_block(input)
+      new_block.must_be_instance_of Hotel::Block
+    end
+
+    it "should raise an error if there are not enough rooms for the block" do
+      rooms_to_reserve = 12
+      rooms_to_reserve.times do
+        @admin.new_reservation(@input1)
+      end
+
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      proc {@admin.reserve_block(input)}.must_raise NoAvailableRoom
+    end
+  end
+
+  describe "Admin#block" do
+    before do
+      @number_of_rooms = 20
+      @admin = Hotel::Admin.new(@number_of_rooms)
+      @input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      @new_block = @admin.reserve_block(@input)
+    end
+
+    it "should have a collection of Blocks" do
+      @admin.blocks.must_be_instance_of Array
+      @admin.blocks.each do |block|
+        block.must_be_instance_of Hotel::Block
+      end
+    end
+  end
+
 end

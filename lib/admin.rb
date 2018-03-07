@@ -3,11 +3,12 @@ require 'date'
 
 module Hotel
   class Admin
-    attr_reader :rooms, :reservations
+    attr_reader :rooms, :reservations, :blocks
 
     def initialize(num_of_rooms=20) # so that a new Admin can be instantiated for a different hotel with a diff number of rooms
       @rooms = get_rooms(num_of_rooms)
       @reservations = []
+      @blocks = []
     end
 
     def new_reservation(input)
@@ -55,6 +56,25 @@ module Hotel
       end
 
       return available_rooms
+    end
+
+    def reserve_block(input)
+      start_date = input[:start_date]
+      end_date = input[:end_date]
+      room_count = input[:room_count]
+
+      available_rooms = find_available_rooms(start_date, end_date)
+
+      if available_rooms.length < room_count
+        raise NoAvailableRoom.new("Not enough rooms for this block, only #{available_rooms.length} rooms available.")
+      end
+
+      rooms_to_block = available_rooms.first(room_count)
+      block_details = input.merge({ block_rooms: rooms_to_block })
+      new_block = Block.new(block_details)
+      @blocks << new_block
+
+      return new_block
     end
 
     private
