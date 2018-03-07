@@ -30,8 +30,6 @@ describe "Hotel::Admin" do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
       @input = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
-      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
-      @new_block = @admin.reserve_block(input1)
     end
 
     it "should create a new instance of reservation if the reservation is available" do
@@ -40,9 +38,19 @@ describe "Hotel::Admin" do
     end
 
     it "should not be able to reserve a room in a block, if not associated with the block" do
+      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      @admin.reserve_block(input1) # rooms 1-4
+
+      new_booking = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1}
+      proc{@admin.new_reservation(new_booking)}.must_raise NoAvailableRoom
+
+    end
+
+    it "should be able to reserve a room in a block if associated with a block" do
+      # decision: association with a block will need to take in the last name of the block reservation but reserving the room will be under the actual person in the room
       skip
-      # should reserve a few blocks then try to reserve a room and get an error?
-      room_ids = @new_block.block_rooms.map{ |room| room.id }
+      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      new_block = @admin.reserve_block(input1) # rooms 6-9
     end
 
     it "should raise an error if there are no available rooms for that date" do

@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Hotel::Block'do
 
-  describe 'Block#initialize'do
+  describe 'Block#initialize'do 
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)

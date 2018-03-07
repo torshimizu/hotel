@@ -17,7 +17,7 @@ module Hotel
 
       available_room = find_available_rooms(start_date, end_date).first
 
-      new_details = input.merge({room_id: available_room.room_id, room: available_room})
+      new_details = {room_id: available_room.room_id, room: available_room}.merge(input) # this should let you specify a room and room_id
       new_reservation = Reservation.new(new_details)
 
       @reservations << new_reservation

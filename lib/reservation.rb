@@ -20,6 +20,10 @@ module Hotel
       if @guest_last_name.nil?
         raise StandardError.new("Must enter a last name")
       end
+
+      if @room_id.nil?
+        raise StandardError.new("Must enter a room number")
+      end
     end
 
     def calculate_cost
