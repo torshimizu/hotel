@@ -30,11 +30,19 @@ describe "Hotel::Admin" do
       number_of_rooms = 20
       @admin = Hotel::Admin.new(number_of_rooms)
       @input = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
+      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      @new_block = @admin.reserve_block(input1)
     end
 
     it "should create a new instance of reservation if the reservation is available" do
       new_reservation = @admin.new_reservation(@input)
       new_reservation.must_be_instance_of Hotel::Reservation
+    end
+
+    it "should not be able to reserve a room in a block, if not associated with the block" do
+      skip
+      # should reserve a few blocks then try to reserve a room and get an error?
+      room_ids = @new_block.block_rooms.map{ |room| room.id }
     end
 
     it "should raise an error if there are no available rooms for that date" do
@@ -138,7 +146,6 @@ describe "Hotel::Admin" do
     end
   end
 
-
   describe "Admin#reserve_block" do
     before do
       @number_of_rooms = 20
@@ -164,6 +171,14 @@ describe "Hotel::Admin" do
 
       input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
       proc {@admin.reserve_block(input)}.must_raise NoAvailableRoom
+    end
+
+    it "should add the block to a room's list of blocks" do
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      new_block = @admin.reserve_block(input)
+      new_block.block_rooms.each do |room|
+        room.blocks.must_include new_block
+      end
     end
   end
 

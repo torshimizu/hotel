@@ -73,6 +73,9 @@ module Hotel
       block_details = input.merge({ block_rooms: rooms_to_block })
       new_block = Block.new(block_details)
       @blocks << new_block
+      new_block.block_rooms.each do |room|
+        room.add_block(new_block)
+      end
 
       return new_block
     end
