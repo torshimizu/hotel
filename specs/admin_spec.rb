@@ -222,18 +222,21 @@ describe "Hotel::Admin" do
       @admin = Hotel::Admin.new(@number_of_rooms)
       @input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
       @new_block = @admin.reserve_block(@input)
-
-      let (:reserv_input) {
-        {start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", guest_last_name: "Hopper"}
-      }
-
-      let (:block_info) {
-        { block_last_name: "Lovelace", start_date: "2018-03-05" }
-      }
     end
 
+    let (:reserv_input) {
+      {start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", guest_last_name: "Hopper"}
+    }
+
+    let (:block_info) {
+      { block_last_name: "Lovelace", start_date: "2018-03-05", end_date: "2018-03-08" }
+    }
+
     it "should return a collection of rooms of a block that are still available" do
-      @admin.new_reservation(reserv_input)
+
+      new_reservation = @admin.new_reservation(reserv_input)
+      reserved_room_id = new_reservation.room_id
+
       available_blockrooms = @admin.get_available_blockrooms(block_info)
 
       available_blockrooms.must_be_instance_of Array
@@ -241,6 +244,22 @@ describe "Hotel::Admin" do
         room.must_be_instance_of Hotel::Room
       end
 
+      available_blockrooms_ids = available_blockrooms.map { |room| room.room_id }
+      available_blockrooms_ids.wont_include reserved_room_id
+    end
+
+    it "should return nil if there are no available rooms in the block" do
+      @input[:room_count].times do
+        @admin.new_reservation(reserv_input)
+      end
+      available_blockrooms = @admin.get_available_blockrooms(block_info)
+
+      available_blockrooms.must_be_nil
+    end
+
+    it "should raise an error if that is not a reserved block" do
+      not_a_block = { block_last_name: "Lovelace", start_date: "2018-03-06", end_date: "2018-03-08" }
+      proc{@admin.get_available_blockrooms(not_a_block)}.must_raise NoReservation
     end
   end
 end

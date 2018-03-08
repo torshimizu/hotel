@@ -81,6 +81,30 @@ module Hotel
       return new_block
     end
 
+    def get_available_blockrooms(input)
+      start_date = Date.parse(input[:start_date])
+      end_date = Date.parse(input[:end_date])
+      block_last_name = input[:block_last_name]
+
+      sought_block = @blocks.find do |block|
+        block.start_date == start_date && block.block_last_name == block_last_name
+      end
+
+      if sought_block.nil?
+        raise NoReservation.new("This is not a reserved block")
+      end
+
+      # ____ This is going to become frustrating ____
+      start_date = start_date.to_s
+      end_date = end_date.to_s
+
+
+      available_rooms = sought_block.block_rooms.select do |room|
+        room.check_availability(start_date, end_date, block_last_name: block_last_name) == :AVAILABLE
+      end
+      return available_rooms.empty? ? nil : available_rooms
+    end
+
     private
 
     def get_rooms(num_of_rooms) # factory method
