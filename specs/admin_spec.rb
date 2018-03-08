@@ -32,25 +32,36 @@ describe "Hotel::Admin" do
       @input = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
     end
 
+    let (:new_booking) {
+      {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1}
+    }
+    let (:block_details) {
+      {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
+    }
+
     it "should create a new instance of reservation if the reservation is available" do
       new_reservation = @admin.new_reservation(@input)
       new_reservation.must_be_instance_of Hotel::Reservation
     end
 
     it "should not be able to reserve a room in a block, if not associated with the block" do
-      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
-      @admin.reserve_block(input1) # rooms 1-4
+      @admin.reserve_block(block_details) # rooms 1-4 reserved
 
-      new_booking = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1}
       proc{@admin.new_reservation(new_booking)}.must_raise NoAvailableRoom
 
     end
 
     it "should be able to reserve a room in a block if associated with a block" do
       # decision: association with a block will need to take in the last name of the block reservation but reserving the room will be under the actual person in the room
-      skip
-      input1 = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
-      new_block = @admin.reserve_block(input1) # rooms 6-9
+      @admin.reserve_block(block_details) # rooms 1-4
+
+      reservation_details = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1, block_last_name: "Lovelace"}
+      new_reservation = @admin.new_reservation(reservation_details)
+      room1 = @admin.rooms.find {|room| room.room_id == new_booking[:room_id]}
+
+      @admin.reservations.must_include new_reservation
+      room1.reservations.must_include new_reservation
+
     end
 
     it "should raise an error if there are no available rooms for that date" do

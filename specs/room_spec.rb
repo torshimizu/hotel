@@ -20,7 +20,7 @@ describe "Hotel::Room" do
 
     it "should be able to return a list of its reservations" do
       @new_room.reservations.must_be_kind_of Array
-      @new_room.add_reservation(Hotel::Reservation.new({start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}))
+      @new_room.add_reservation(Hotel::Reservation.new({start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace", room_id: 2}))
       @new_room.reservations.each do |reservation|
         reservation.must_be_instance_of Hotel::Reservation
       end
