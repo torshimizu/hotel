@@ -18,7 +18,7 @@ module Hotel
       # if there already is a reservation, then this room is not available
       @reservations.each do |reservation|
         # range = (reservation.start_date..reservation.end_date)
-        if overlap_date_range?(start_date, end_date, reservation)
+        if DateHelper.overlap_date_range?(start_date, end_date, reservation)
           return :UNAVAILABLE
         end
       end
@@ -41,7 +41,7 @@ module Hotel
       if block_last_name.nil? # if not part of a block
         # find reservations that might overlap/contain this date range
         overlapping_blocks = @blocks.select do |block|
-          overlap_date_range?(start_date, end_date, block)
+          DateHelper.overlap_date_range?(start_date, end_date, block)
         end
 
         if overlapping_blocks.empty?
@@ -59,17 +59,6 @@ module Hotel
           return :AVAILABLE
         end
 
-      end
-    end
-
-    def overlap_date_range?(start_date, end_date, block_res)
-      reservation_range = (block_res.start_date...block_res.end_date).to_a
-      check_range = (start_date...end_date).to_a
-      overlap = reservation_range & check_range
-      if !overlap.empty?
-        return true
-      else
-        return false
       end
     end
 
