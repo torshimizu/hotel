@@ -44,13 +44,16 @@ describe "Hotel::Admin" do
       new_reservation.must_be_instance_of Hotel::Reservation
     end
 
+    # ____ FAILING ____
     it "should not be able to reserve a room in a block, if not associated with the block" do
-      @admin.reserve_block(block_details) # rooms 1-4 reserved
+      new_block = @admin.reserve_block(block_details) # rooms 1-4 reserved
+      p new_block.block_rooms.map {|room| room.room_id}
 
       proc{@admin.new_reservation(new_booking)}.must_raise NoAvailableRoom
 
     end
 
+    # ____ PASSING ... maybe ____
     it "should be able to reserve a room in a block if associated with a block" do
       # decision: association with a block will need to take in the last name of the block reservation but reserving the room will be under the actual person in the room
       @admin.reserve_block(block_details) # rooms 1-4

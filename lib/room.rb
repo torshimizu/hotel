@@ -8,7 +8,7 @@ module Hotel
       @room_id = input[:id]
       @cost = STANDARD_RATE
       @reservations = input[:reservations] == nil ? [] : input[:reservations] # setting the default to an empty array if no reservations for that room
-      @blocks = input[:block_rooms] == nil ? [] : input[:block_rooms]
+      @blocks = []
     end
 
     def check_availability(start_date, end_date, block_last_name: nil) # should this be a date or string instance?
@@ -40,6 +40,7 @@ module Hotel
       # if not part of a block
       if block_last_name.nil?
         # find reservations that might overlap/contain this date range
+
         overlapping_blocks = @blocks.select do |block|
           range = block.start_date..block.end_date
           overlap_date_range?(start_date, end_date, range)
@@ -52,10 +53,12 @@ module Hotel
         end
 
       else
-        if blocks.any? {|block| block.start_date == start_date && block.block_last_name == block_last_name}
-          return :AVAILABLE
-        else
+        selected_block = @blocks.find {|block| block.start_date == start_date && block.block_last_name == block_last_name}
+
+        if selected_block.nil? # this is not defensive
           return :UNAVAILABLE
+        else
+          return :AVAILABLE
         end
 
       end
