@@ -6,7 +6,7 @@ module Hotel
 
     def initialize(input) # taking a hash so that an array of reservations can be loaded if that's what user wants to do
       @room_id = input[:id]
-      @cost = STANDARD_RATE
+      @cost = input[:cost] || STANDARD_RATE
       @reservations = input[:reservations] == nil ? [] : input[:reservations] # setting the default to an empty array if no reservations for that room
       @blocks = []
     end
