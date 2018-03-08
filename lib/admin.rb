@@ -11,11 +11,12 @@ module Hotel
       @blocks = []
     end
 
-    def new_reservation(input)
+    def new_reservation(input) # this needs to be updated to check availability/invclusion in a block
       start_date = input[:start_date]
       end_date = input[:end_date]
+      block_last_name = input[:block_last_name]
 
-      available_room = find_available_rooms(start_date, end_date).first
+      available_room = find_available_rooms(start_date, end_date, block_last_name: block_last_name).first
 
       new_details = {room_id: available_room.room_id, room: available_room}.merge(input) # this should let you specify a room and room_id
       new_reservation = Reservation.new(new_details)
@@ -48,8 +49,8 @@ module Hotel
       return check_for_reservation(found_reservation)
     end
 
-    def find_available_rooms(start_date, end_date)
-      available_rooms = @rooms.select { |room| room.check_availability(start_date, end_date) == :AVAILABLE }
+    def find_available_rooms(start_date, end_date, block_last_name: nil)
+        available_rooms = @rooms.select { |room| room.check_availability(start_date, end_date, block_last_name: block_last_name) == :AVAILABLE }
 
       if available_rooms.empty?
         raise NoAvailableRoom.new("No rooms are available for those dates")
@@ -70,7 +71,7 @@ module Hotel
       end
 
       rooms_to_block = available_rooms.first(room_count)
-      block_details = input.merge({ block_rooms: rooms_to_block })
+      block_details = input.merge( { block_rooms: rooms_to_block })
       new_block = Block.new(block_details)
       @blocks << new_block
       new_block.block_rooms.each do |room|

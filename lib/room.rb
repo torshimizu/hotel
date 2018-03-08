@@ -11,17 +11,19 @@ module Hotel
       @blocks = input[:block_rooms] == nil ? [] : input[:block_rooms]
     end
 
-    def check_availability(start_date, end_date) # should this be a date or string instance?
+    def check_availability(start_date, end_date, block_last_name: nil) # should this be a date or string instance?
       start_date = Date.parse(start_date)
       end_date = Date.parse(end_date)
 
+      # if there already is a reservation, then this room is not available
       @reservations.each do |reservation|
         range = (reservation.start_date..reservation.end_date)
-        if range.include?(start_date) || range.include?(end_date)
+        if overlap_date_range?(start_date, end_date, range)
           return :UNAVAILABLE
         end
       end
-      return :AVAILABLE
+
+      check_for_block(start_date, end_date, block_last_name: block_last_name)
     end
 
     def add_reservation(reservation)
@@ -31,5 +33,41 @@ module Hotel
     def add_block(block)
       @blocks << block
     end
-  end
-end
+
+    private
+
+    def check_for_block(start_date, end_date, block_last_name: nil)
+      # if not part of a block
+      if block_last_name.nil?
+        # find reservations that might overlap/contain this date range
+        overlapping_blocks = @blocks.select do |block|
+          range = block.start_date..block.end_date
+          overlap_date_range?(start_date, end_date, range)
+        end
+
+        if overlapping_blocks.empty?
+          return :AVAILABLE
+        else
+          return :UNAVAILABLE
+        end
+
+      else
+        if blocks.any? {|block| block.start_date == start_date && block.block_last_name == block_last_name}
+          return :AVAILABLE
+        else
+          return :UNAVAILABLE
+        end
+
+      end
+    end
+
+    def overlap_date_range?(start_date, end_date, date_range)
+      if date_range.include?(start_date) || date_range.include?(end_date)
+        return true
+      else
+        return false
+      end
+    end
+
+  end # class
+end # module
