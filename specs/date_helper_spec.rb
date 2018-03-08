@@ -25,4 +25,14 @@ describe Hotel::DateHelper do
     end
   end
 
+  describe "DateHelper.overlap_date_range?" do
+    before do
+
+    end
+    it "will return true if two date ranges overlap" do
+      DateHelper.overlap_date_range(start_date, end_date, block_or_reservation).must_equal true
+
+    end
+  end
+
 end

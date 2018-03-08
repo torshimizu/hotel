@@ -10,7 +10,7 @@ module Hotel
       @block_last_name = input[:block_last_name]
 
       if @block_last_name.nil?
-        raise StandardError.new("Must enter a last name")
+        raise ArgumentError.new("Must enter a last name")
       end
     end
 

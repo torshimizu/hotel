@@ -25,6 +25,11 @@ describe "Hotel::Reservation" do
       proc {Hotel::Reservation.new(details)}.must_raise StandardError
     end
 
+    it "must raise an error if no room id is given" do
+      details = { start_date: "2018-03-23", end_date: "2018-03-25", guest_last_name: "Lovelace"}
+      proc {Hotel::Reservation.new(details)}.must_raise StandardError
+    end
+
     it "must have an associated room id" do
         @reservation.must_respond_to :room_id
         @reservation.room_id.must_equal @room.room_id
