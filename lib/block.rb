@@ -1,9 +1,9 @@
 module Hotel
   class Block
-    attr_reader :start_date, :end_date, :block_rooms, :rate, :block_last_name
+    attr_reader :start_date, :end_date, :block_rooms, :cost, :block_last_name
 
     def initialize(input)
-      @rate = input[:rate]
+      @cost = input[:rate]
       @start_date = Date.parse(input[:start_date])
       @end_date = Date.parse(input[:end_date])
       @block_rooms = check_room_count(input[:block_rooms]) # wouldn't I want this to take room_id's not rooms? or will the rooms be found in admin

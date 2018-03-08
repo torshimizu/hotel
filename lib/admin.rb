@@ -11,7 +11,7 @@ module Hotel
       @blocks = []
     end
 
-    def new_reservation(input) # this needs to be updated to check availability/invclusion in a block
+    def new_reservation(input)
       start_date = input[:start_date]
       end_date = input[:end_date]
       block_last_name = input[:block_last_name]
@@ -27,8 +27,8 @@ module Hotel
       return new_reservation
     end
 
-    def list_reservations(start_date)
-      start_date = Date.parse(start_date)
+    def list_reservations(start_date) # should I change this?
+      start_date = DateHelper.parse(start_date)
 
       date_reservations = @reservations.select do |reservation|
         (reservation.start_date..reservation.end_date).include?(start_date)
@@ -42,7 +42,7 @@ module Hotel
     end
 
     def find_reservation(start_date:, room_id:)
-      start_date = Date.parse(start_date)
+      start_date = DateHelper.parse(start_date)
       found_reservation = @reservations.find(nil) do |reservation|
         reservation.start_date == start_date && reservation.room_id == room_id
       end
@@ -82,8 +82,8 @@ module Hotel
     end
 
     def get_available_blockrooms(input)
-      start_date = Date.parse(input[:start_date])
-      end_date = Date.parse(input[:end_date])
+      start_date = DateHelper.parse(input[:start_date])
+      end_date = DateHelper.parse(input[:end_date])
       block_last_name = input[:block_last_name]
 
       sought_block = @blocks.find do |block|
@@ -93,11 +93,6 @@ module Hotel
       if sought_block.nil?
         raise NoReservation.new("This is not a reserved block")
       end
-
-      # ____ This is going to become frustrating ____
-      start_date = start_date.to_s
-      end_date = end_date.to_s
-
 
       available_rooms = sought_block.block_rooms.select do |room|
         room.check_availability(start_date, end_date, block_last_name: block_last_name) == :AVAILABLE

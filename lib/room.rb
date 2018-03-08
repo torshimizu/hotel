@@ -12,8 +12,8 @@ module Hotel
     end
 
     def check_availability(start_date, end_date, block_last_name: nil) # should this be a date or string instance?
-      start_date = Date.parse(start_date)
-      end_date = Date.parse(end_date)
+      start_date = DateHelper.parse(start_date)
+      end_date = DateHelper.parse(end_date)
 
       # if there already is a reservation, then this room is not available
       @reservations.each do |reservation|
