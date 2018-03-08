@@ -8,6 +8,10 @@ module Hotel
       @end_date = Date.parse(input[:end_date])
       @block_rooms = check_room_count(input[:block_rooms]) # wouldn't I want this to take room_id's not rooms? or will the rooms be found in admin
       @block_last_name = input[:block_last_name]
+
+      if @block_last_name.nil?
+        raise StandardError.new("Must enter a last name")
+      end
     end
 
     def check_room_count(block_rooms)

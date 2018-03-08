@@ -37,8 +37,8 @@ module Hotel
     private
 
     def check_for_block(start_date, end_date, block_last_name: nil)
-      # if not part of a block
-      if block_last_name.nil?
+
+      if block_last_name.nil? # if not part of a block
         # find reservations that might overlap/contain this date range
         overlapping_blocks = @blocks.select do |block|
           overlap_date_range?(start_date, end_date, block)
@@ -63,8 +63,10 @@ module Hotel
     end
 
     def overlap_date_range?(start_date, end_date, block_res)
-      range = block_res.start_date..block_res.end_date
-      if range.include?(start_date) || range.include?(end_date)
+      reservation_range = (block_res.start_date...block_res.end_date).to_a
+      check_range = (start_date...end_date).to_a
+      overlap = reservation_range & check_range
+      if !overlap.empty?
         return true
       else
         return false

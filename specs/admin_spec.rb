@@ -44,7 +44,6 @@ describe "Hotel::Admin" do
       new_reservation.must_be_instance_of Hotel::Reservation
     end
 
-    # ____ FAILING ____
     it "should not be able to reserve a room in a block, if not associated with the block" do
       @admin.reserve_block(block_details) # rooms 1-4 reserved
 
@@ -52,9 +51,7 @@ describe "Hotel::Admin" do
 
     end
 
-    # ____ PASSING ... maybe ____
     it "should be able to reserve a room in a block if associated with a block" do
-      # decision: association with a block will need to take in the last name of the block reservation but reserving the room will be under the actual person in the room
       @admin.reserve_block(block_details) # rooms 1-4
 
       reservation_details = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1, block_last_name: "Lovelace"}
@@ -179,7 +176,7 @@ describe "Hotel::Admin" do
     end
 
     it "should create a new instance of Hotel::Block" do
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
       new_block = @admin.reserve_block(input)
       new_block.must_be_instance_of Hotel::Block
     end
@@ -190,12 +187,12 @@ describe "Hotel::Admin" do
         @admin.new_reservation(@input1)
       end
 
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
       proc {@admin.reserve_block(input)}.must_raise NoAvailableRoom
     end
 
     it "should add the block to a room's list of blocks" do
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
       new_block = @admin.reserve_block(input)
       new_block.block_rooms.each do |room|
         room.blocks.must_include new_block
@@ -207,7 +204,7 @@ describe "Hotel::Admin" do
     before do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
-      @input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace"}
+      @input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
       @new_block = @admin.reserve_block(@input)
     end
 
@@ -219,4 +216,31 @@ describe "Hotel::Admin" do
     end
   end
 
+  describe "Admin#get_available_blockrooms" do
+    before do
+      @number_of_rooms = 20
+      @admin = Hotel::Admin.new(@number_of_rooms)
+      @input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
+      @new_block = @admin.reserve_block(@input)
+
+      let (:reserv_input) {
+        {start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", guest_last_name: "Hopper"}
+      }
+
+      let (:block_info) {
+        { block_last_name: "Lovelace", start_date: "2018-03-05" }
+      }
+    end
+
+    it "should return a collection of rooms of a block that are still available" do
+      @admin.new_reservation(reserv_input)
+      available_blockrooms = @admin.get_available_blockrooms(block_info)
+
+      available_blockrooms.must_be_instance_of Array
+      available_blockrooms.each do |room|
+        room.must_be_instance_of Hotel::Room
+      end
+
+    end
+  end
 end
