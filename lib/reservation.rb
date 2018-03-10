@@ -5,8 +5,8 @@ module Hotel
     attr_reader :room, :start_date, :end_date, :guest_last_name, :room_id
 
     def initialize(input)
-      @start_date = Date.parse(input[:start_date])
-      @end_date = Date.parse(input[:end_date])
+      @start_date = DateHelper.parse(input[:start_date])
+      @end_date = DateHelper.parse(input[:end_date])
       @room = input[:room].nil? ? nil : input[:room]
       @room_id = input[:room_id]
       @guest_last_name = input[:guest_last_name]

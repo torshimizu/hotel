@@ -4,8 +4,8 @@ module Hotel
 
     def initialize(input)
       @cost = input[:rate]
-      @start_date = Date.parse(input[:start_date])
-      @end_date = Date.parse(input[:end_date])
+      @start_date = DateHelper.parse(input[:start_date])
+      @end_date = DateHelper.parse(input[:end_date])
       @block_rooms = check_room_count(input[:block_rooms]) # wouldn't I want this to take room_id's not rooms? or will the rooms be found in admin
       @block_last_name = input[:block_last_name]
 
