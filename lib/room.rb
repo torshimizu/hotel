@@ -6,7 +6,6 @@ module Hotel
 
     def initialize(input) # taking a hash so that an array of reservations can be loaded if that's what user wants to do
       @room_id = input[:id]
-      @cost = input[:cost] || STANDARD_RATE
       @reservations = input[:reservations] == nil ? [] : input[:reservations] # setting the default to an empty array if no reservations for that room
       @blocks = []
     end
@@ -17,7 +16,6 @@ module Hotel
 
       # if there already is a reservation, then this room is not available
       @reservations.each do |reservation|
-        # range = (reservation.start_date..reservation.end_date)
         if DateHelper.overlap_date_range?(start_date, end_date, reservation)
           return :UNAVAILABLE
         end
@@ -53,7 +51,7 @@ module Hotel
       else
         selected_block = @blocks.find {|block| block.start_date == start_date && block.block_last_name == block_last_name}
 
-        if selected_block.nil? # this is not defensive
+        if selected_block.nil?
           return :UNAVAILABLE
         else
           return :AVAILABLE

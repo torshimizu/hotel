@@ -14,10 +14,6 @@ describe "Hotel::Room" do
       @new_room.room_id.must_equal 1
     end
 
-    it "must be able to return its cost" do
-      @new_room.cost.must_be_instance_of Integer
-    end
-
     it "should be able to return a list of its reservations" do
       @new_room.reservations.must_be_kind_of Array
       @new_room.add_reservation(Hotel::Reservation.new({start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Lovelace", room_id: 2}))
