@@ -12,16 +12,31 @@ describe Hotel::DateHelper do
       date1 = "05/03/2018"
       date_1 = Hotel::DateHelper.parse(date1)
       date_1.must_be_instance_of Date
+      date_1.year.must_equal 2018
+      date_1.month.must_equal 5
 
       date2 = "05-03-2018"
       date_2 = Hotel::DateHelper.parse(date2)
       date_2.must_be_instance_of Date
+      date_2.month.must_equal 5
+
+      date3 = "20180405"
+      date_3 = Hotel::DateHelper.parse(date3)
+      date_3.must_be_instance_of Date
+      date_3.month.must_equal 4
+      date_3.day.must_equal 5
     end
 
     it "can handle an instance of date" do
       date1 = Date.new(2018,03,05)
       date_1 = Hotel::DateHelper.parse(date1)
       date_1.must_be_instance_of Date
+    end
+
+    it "will raise an error if the date entered is not a possible date" do
+      date1 = "2018-02-30"
+      proc {Hotel::DateHelper.parse(date1)}.must_raise ArgumentError
+
     end
   end
 
