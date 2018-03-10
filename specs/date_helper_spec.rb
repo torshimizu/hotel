@@ -27,11 +27,13 @@ describe Hotel::DateHelper do
 
   describe "DateHelper.overlap_date_range?" do
     before do
-
+      @admin = Hotel::Admin.new(5)
+      @input = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
+      @reservation1 = @admin.new_reservation(@input)
     end
-    it "will return true if two date ranges overlap" do
-      DateHelper.overlap_date_range(start_date, end_date, block_or_reservation).must_equal true
 
+    it "will return true if two date ranges overlap" do
+      Hotel::DateHelper.overlap_date_range?("2018-03-07", "2018-03-10", @reservation1).must_equal true
     end
   end
 

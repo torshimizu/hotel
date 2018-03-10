@@ -20,13 +20,9 @@ module Hotel
 
     def self.overlap_date_range?(start_date, end_date, block_res)
       reservation_range = (block_res.start_date...block_res.end_date).to_a
-      check_range = (start_date...end_date).to_a
+      check_range = (parse(start_date)...parse(end_date)).to_a
       overlap = reservation_range & check_range
-      if !overlap.empty?
-        return true
-      else
-        return false
-      end
+      return !overlap.empty?
     end
   end # class
 end # module
