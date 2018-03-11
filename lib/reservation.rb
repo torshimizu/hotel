@@ -24,10 +24,10 @@ module Hotel
       end
     end
 
-    # def calculate_cost # this might be useless here - maybe move to admin, so block and reservation can be accessed...
-    #   duration = (@end_date - @start_date).to_i
-    #   return (duration * STANDARD_RATE).to_f.round(2)
-    # end
+    def calculate_cost 
+      duration = (@end_date - @start_date).to_i
+      return (duration * @cost).to_f.round(2)
+    end
 
   end # Reservation
 end # Hotel

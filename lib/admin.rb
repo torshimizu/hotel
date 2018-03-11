@@ -35,7 +35,7 @@ module Hotel
       return new_reservation
     end
 
-    def list_reservations(start_date) # should I change this?
+    def list_reservations(start_date)
       start_date = DateHelper.parse(start_date)
 
       date_reservations = @reservations.select do |reservation|
@@ -46,9 +46,7 @@ module Hotel
 
     def calculate_reservation_cost(start_date:, room_id:)
       reservation = check_for_reservation(find_reservation(start_date: start_date, room_id: room_id))
-      # return reservation.calculate_cost
-      duration = (reservation.end_date - reservation.start_date).to_i
-      return (duration * reservation.cost).to_f.round(2)
+      return reservation.calculate_cost
     end
 
     def find_reservation(start_date:, room_id:)
