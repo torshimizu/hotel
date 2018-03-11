@@ -36,7 +36,7 @@ module Hotel
 
     def check_for_block(start_date, end_date, block_last_name: nil)
 
-      if block_last_name.nil? 
+      if block_last_name.nil?
         overlapping_blocks = @blocks.select do |block|
           DateHelper.overlap_date_range?(start_date, end_date, block)
         end
@@ -44,7 +44,8 @@ module Hotel
         if overlapping_blocks.empty?
           return :AVAILABLE
         else
-          raise NoAvailableRoom.new("This room is not available for reserving")
+          return :UNAVAILABLE
+          # raise NoAvailableRoom.new("This room is not available for reserving")
         end
 
       else

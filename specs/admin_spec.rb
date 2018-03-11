@@ -33,7 +33,7 @@ describe "Hotel::Admin" do
     end
 
     let (:new_booking) {
-      {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1}
+      {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper"}
     }
     let (:block_details) {
       {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
@@ -45,9 +45,15 @@ describe "Hotel::Admin" do
     end
 
     it "should not be able to reserve a room in a block, if not associated with the block" do
-      @admin.reserve_block(block_details) # rooms 1-4 reserved
-
-      proc{@admin.new_reservation(new_booking)}.must_raise NoAvailableRoom
+      4.times do
+        @admin.reserve_block(block_details) # rooms 1-16 reserved
+      end
+      all_blocked_rooms = @admin.blocks.map {|block| block.block_rooms}.flatten
+      all_block_ids = all_blocked_rooms.map {|room| room.room_id}
+      new_reservation = @admin.new_reservation(new_booking)
+      new_res_id = new_reservation.room_id
+      new_res_id.must_equal 17
+      all_block_ids.wont_include new_res_id
 
     end
 
@@ -56,7 +62,7 @@ describe "Hotel::Admin" do
 
       reservation_details = {start_date: "2018-03-05", end_date: "2018-03-08", guest_last_name: "Hopper", room_id: 1, block_last_name: "Lovelace"}
       new_reservation = @admin.new_reservation(reservation_details)
-      room1 = @admin.rooms.find {|room| room.room_id == new_booking[:room_id]}
+      room1 = @admin.rooms.find {|room| room.room_id == reservation_details[:room_id]}
 
       @admin.reservations.must_include new_reservation
       room1.reservations.must_include new_reservation
@@ -141,7 +147,7 @@ describe "Hotel::Admin" do
       reservation_deets = {start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", guest_last_name: "Franklin"}
       new_reservation = @admin.new_reservation(reservation_deets)
       room_id = new_reservation.room_id
-      
+
       cost = @admin.calculate_reservation_cost(room_id: room_id, start_date: reservation_deets[:start_date])
       cost.must_be_instance_of Float
       cost.must_equal 450.00
@@ -188,9 +194,12 @@ describe "Hotel::Admin" do
       end
     end
 
+    let (:block_input) {
+      {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
+    }
+
     it "should create a new instance of Hotel::Block" do
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
-      new_block = @admin.reserve_block(input)
+      new_block = @admin.reserve_block(block_input)
       new_block.must_be_instance_of Hotel::Block
     end
 
@@ -200,16 +209,26 @@ describe "Hotel::Admin" do
         @admin.new_reservation(@input1)
       end
 
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
-      proc {@admin.reserve_block(input)}.must_raise NoAvailableRoom
+      proc {@admin.reserve_block(block_input)}.must_raise NoAvailableRoom
     end
 
     it "should add the block to a room's list of blocks" do
-      input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace"}
-      new_block = @admin.reserve_block(input)
+      new_block = @admin.reserve_block(block_input)
       new_block.block_rooms.each do |room|
         room.blocks.must_include new_block
       end
+    end
+
+    it "should not block the same rooms for a new block" do
+      block1 = @admin.reserve_block(block_input) # rooms 6 - 9
+      block1_rmids = block1.block_rooms.map {|room| room.room_id}
+
+      new_block_deets = {room_count: 4, start_date: "2018-03-07", end_date: "2018-03-12", block_last_name: "Franklin", cost: 150}
+      new_block = @admin.reserve_block(new_block_deets)
+      new_block_rmids = new_block.block_rooms.map {|room| room.room_id}
+
+      overlap = block1_rmids & new_block_rmids
+      overlap.must_equal []
     end
   end
 
