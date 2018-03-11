@@ -12,11 +12,19 @@ module Hotel
     end
 
     def new_reservation(input)
-      start_date = input[:start_date]
-      end_date = input[:end_date]
+      start_date = DateHelper.parse(input[:start_date])
+      end_date = DateHelper.parse(input[:end_date])
       block_last_name = input[:block_last_name]
+      room_id = input[:room_id]
+
 
       available_room = find_available_rooms(start_date, end_date, block_last_name: block_last_name).first
+
+      if block_last_name
+        input[:cost] = find_block(start_date, block_last_name).cost
+      end
+
+      specified_room_check(start_date, room_id)
 
       new_details = {room_id: available_room.room_id, room: available_room}.merge(input) # this should let you specify a room and room_id
       new_reservation = Reservation.new(new_details)
@@ -37,8 +45,10 @@ module Hotel
     end
 
     def calculate_reservation_cost(start_date:, room_id:)
-      reservation = find_reservation(start_date: start_date, room_id: room_id)
-      reservation.calculate_cost
+      reservation = check_for_reservation(find_reservation(start_date: start_date, room_id: room_id))
+      # return reservation.calculate_cost
+      duration = (reservation.end_date - reservation.start_date).to_i
+      return (duration * reservation.cost).to_f.round(2)
     end
 
     def find_reservation(start_date:, room_id:)
@@ -46,7 +56,7 @@ module Hotel
       found_reservation = @reservations.find(nil) do |reservation|
         reservation.start_date == start_date && reservation.room_id == room_id
       end
-      return check_for_reservation(found_reservation)
+      return found_reservation
     end
 
     def find_available_rooms(start_date, end_date, block_last_name: nil)
@@ -86,9 +96,7 @@ module Hotel
       end_date = DateHelper.parse(input[:end_date])
       block_last_name = input[:block_last_name]
 
-      sought_block = @blocks.find do |block|
-        block.start_date == start_date && block.block_last_name == block_last_name
-      end
+      sought_block = find_block(start_date, block_last_name)
 
       if sought_block.nil?
         raise NoReservation.new("This is not a reserved block")
@@ -111,12 +119,25 @@ module Hotel
       return rooms
     end
 
+    def specified_room_check(start_date, room_id)
+      if room_id
+        checking_reservation = find_reservation(start_date: start_date, room_id: room_id)
+        raise NoAvailableRoom.new("This room is already reserved.") unless checking_reservation.nil?
+      end
+    end
 
     def check_for_reservation(reservation)
       if reservation.nil?
         raise NoReservation.new("There is no reservation for that date")
       end
       return reservation
+    end
+
+    def find_block(start_date, block_last_name)
+      found_block = @blocks.find do |block|
+        block.start_date == start_date && block.block_last_name == block_last_name
+      end
+      return found_block
     end
 
   end

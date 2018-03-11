@@ -1,8 +1,6 @@
-require 'date'
-
 module Hotel
   class Reservation
-    attr_reader :room, :start_date, :end_date, :guest_last_name, :room_id
+    attr_reader :room, :start_date, :end_date, :guest_last_name, :room_id, :cost
 
     def initialize(input)
       @start_date = DateHelper.parse(input[:start_date])
@@ -11,7 +9,7 @@ module Hotel
       @room_id = input[:room_id]
       @guest_last_name = input[:guest_last_name]
       @guest_first_name = input[:guest_first_name].nil? ? nil : input[:guest_first_name]
-      @block = input[:block].nil? ? nil : input[:block]
+      @cost = input[:cost] || STANDARD_RATE
 
       if (@start_date == nil || @end_date == nil) || @start_date > @end_date
         raise StandardError.new("Invalid dates")
@@ -26,10 +24,10 @@ module Hotel
       end
     end
 
-    def calculate_cost # this might be useless here - maybe move to admin, so block and reservation can be accessed...
-      duration = (@end_date - @start_date).to_i
-      return (duration * STANDARD_RATE).to_f.round(2)
-    end
+    # def calculate_cost # this might be useless here - maybe move to admin, so block and reservation can be accessed...
+    #   duration = (@end_date - @start_date).to_i
+    #   return (duration * STANDARD_RATE).to_f.round(2)
+    # end
 
   end # Reservation
 end # Hotel

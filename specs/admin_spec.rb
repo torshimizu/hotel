@@ -133,6 +133,19 @@ describe "Hotel::Admin" do
     it "should return an error if no reservation" do
       proc{@admin.calculate_reservation_cost(room_id: 7, start_date: "2018-03-05")}.must_raise NoReservation
     end
+
+    it "should calculate the cost based on the block pricing, if block pricing is specified" do
+      block_input = {room_count: 4, start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", cost: 150}
+      @admin.reserve_block(block_input)
+
+      reservation_deets = {start_date: "2018-03-05", end_date: "2018-03-08", block_last_name: "Lovelace", guest_last_name: "Franklin"}
+      new_reservation = @admin.new_reservation(reservation_deets)
+      room_id = new_reservation.room_id
+      
+      cost = @admin.calculate_reservation_cost(room_id: room_id, start_date: reservation_deets[:start_date])
+      cost.must_be_instance_of Float
+      cost.must_equal 450.00
+    end
   end
 
   describe "Admin#find_available_rooms" do

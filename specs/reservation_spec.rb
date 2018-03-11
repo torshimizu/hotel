@@ -41,17 +41,17 @@ describe "Hotel::Reservation" do
     end
   end
 
-  describe "Reservation#calculate_cost" do
-    before do
-      details = { start_date: "2018-03-23", end_date: "2018-03-25", room_id: 2, guest_last_name: "Lovelace" }
-      @reservation = Hotel::Reservation.new(details)
-    end
-
-    it "must return the cost of the reservation" do
-      @reservation.calculate_cost.must_be_instance_of Float
-      @reservation.calculate_cost.must_equal 400.00
-    end
-
-  end
+  # describe "Reservation#calculate_cost" do
+  #   before do
+  #     details = { start_date: "2018-03-23", end_date: "2018-03-25", room_id: 2, guest_last_name: "Lovelace" }
+  #     @reservation = Hotel::Reservation.new(details)
+  #   end
+  #
+  #   it "must return the cost of the reservation" do
+  #     @reservation.calculate_cost.must_be_instance_of Float
+  #     @reservation.calculate_cost.must_equal 400.00
+  #   end
+  #
+  # end
 
 end

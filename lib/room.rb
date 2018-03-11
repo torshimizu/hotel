@@ -2,7 +2,7 @@ module Hotel
   STANDARD_RATE = 200
 
   class Room
-    attr_reader :room_id, :cost, :reservations, :blocks
+    attr_reader :room_id, :reservations, :blocks
 
     def initialize(input) # taking a hash so that an array of reservations can be loaded if that's what user wants to do
       @room_id = input[:id]
@@ -36,8 +36,7 @@ module Hotel
 
     def check_for_block(start_date, end_date, block_last_name: nil)
 
-      if block_last_name.nil? # if not part of a block
-        # find reservations that might overlap/contain this date range
+      if block_last_name.nil? 
         overlapping_blocks = @blocks.select do |block|
           DateHelper.overlap_date_range?(start_date, end_date, block)
         end

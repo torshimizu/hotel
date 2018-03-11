@@ -7,7 +7,7 @@ describe 'Hotel::Block'do
       @number_of_rooms = 20
       @admin = Hotel::Admin.new(@number_of_rooms)
       @block_rooms = @admin.rooms.select {|room| (1..5).include?(room.room_id)}
-      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: @block_rooms, rate: 150, block_last_name: "Lovelace"}
+      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: @block_rooms, cost: 150, block_last_name: "Lovelace"}
       @new_block = Hotel::Block.new(input)
     end
 
@@ -24,14 +24,14 @@ describe 'Hotel::Block'do
 
     it "cannot have more than 5 rooms in the block" do
       block_rooms = @admin.rooms.select {|room| (1..6).include?(room.room_id)}
-      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: block_rooms, rate: 150}
+      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: block_rooms, cost: 150}
 
       proc {Hotel::Block.new(input)}.must_raise StandardError
 
     end
 
     it "must raise an error if no last name is given for the block" do
-      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: @block_rooms, rate: 150 }
+      input = {start_date: "2018-03-08", end_date: "2018-03-12", block_rooms: @block_rooms, cost: 150 }
       proc{Hotel::Block.new(input)}.must_raise ArgumentError
     end
   end
