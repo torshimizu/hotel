@@ -1,6 +1,3 @@
-require_relative 'notavailable'
-require 'date'
-
 module Hotel
   class Admin
     attr_reader :rooms, :reservations, :blocks
