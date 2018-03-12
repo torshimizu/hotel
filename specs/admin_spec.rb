@@ -69,6 +69,17 @@ describe "Hotel::Admin" do
 
     end
 
+    it "should be able to reserve a room that has another reservation ending on the start date" do
+      first_reservation = @admin.new_reservation(@input) # room 1
+
+      new_reservation = {start_date: "2018-03-08", end_date: "2018-03-10", guest_last_name: "Franklin", room_id: 1}
+      reservation = @admin.new_reservation(new_reservation)
+      reservation.room_id.must_equal first_reservation.room_id
+      room1 = @admin.rooms.find {|room| room.room_id == 1}
+      room1.reservations.must_include first_reservation
+      room1.reservations.must_include reservation
+    end
+
     it "should raise an error if there are no available rooms for that date" do
       20.times do
         @admin.new_reservation(@input)
