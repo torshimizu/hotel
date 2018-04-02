@@ -8,11 +8,10 @@ module Hotel
       @blocks = []
     end
 
-    def new_reservation(input)
-      start_date = DateHelper.parse(input[:start_date])
-      end_date = DateHelper.parse(input[:end_date])
-      block_last_name = input[:block_last_name]
-      room_id = input[:room_id]
+    def new_reservation(start_date:, end_date:, guest_last_name:, block_last_name: nil, cost: STANDARD_RATE, room_id: nil)
+      start_date = DateHelper.parse(:start_date)
+      end_date = DateHelper.parse(:end_date)
+      block_last_name = :block_last_name
 
 
       available_room = find_available_rooms(start_date, end_date, block_last_name: block_last_name).first
